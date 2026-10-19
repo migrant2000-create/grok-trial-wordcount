@@ -40,7 +40,7 @@ def test_no_countable_content() -> None:
 
 def test_contraction_and_hyphen_are_one_word() -> None:
     result = count_text("don't say well-known or mother-in-law")
-    assert result.english_words == 4
+    assert result.english_words == 5
     assert result.chinese_chars == 0
 
 
