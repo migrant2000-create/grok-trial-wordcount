@@ -11,7 +11,7 @@ from wordcount.count import count_text, format_report
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="wordcount",
-        description="统计中文字符数、英文单词数，并估算阅读时间（分钟）。",
+        description="统计中文字符数、英文单词数，并估算阅读时间（秒）。",
     )
     parser.add_argument(
         "path",

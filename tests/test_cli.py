@@ -40,14 +40,14 @@ def test_cli_reads_file(tmp_path: Path) -> None:
     assert result.stdout == format_report(count_text(text))
     assert "中文字数: 4\n" in result.stdout
     assert "英文词数: 8\n" in result.stdout
-    assert "阅读时间: 1 分钟\n" in result.stdout
+    assert "阅读时间: 0 秒\n" in result.stdout
 
 
 def test_cli_reads_stdin() -> None:
     result = _run(stdin="你好 world\n")
 
     assert result.returncode == 0
-    assert result.stdout == "中文字数: 2\n英文词数: 1\n阅读时间: 1 分钟\n"
+    assert result.stdout == "中文字数: 2\n英文词数: 1\n阅读时间: 0 秒\n"
 
 
 def test_cli_missing_file() -> None:
@@ -62,4 +62,4 @@ def test_cli_empty_stdin() -> None:
     result = _run(stdin="")
 
     assert result.returncode == 0
-    assert result.stdout == "中文字数: 0\n英文词数: 0\n阅读时间: 0 分钟\n"
+    assert result.stdout == "中文字数: 0\n英文词数: 0\n阅读时间: 0 秒\n"

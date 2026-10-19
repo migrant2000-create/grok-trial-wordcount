@@ -30,19 +30,22 @@ _ENGLISH_WORD = re.compile(r"[A-Za-z]+(?:['-][A-Za-z]+)*")
 class CountResult:
     chinese_chars: int
     english_words: int
-    reading_minutes: int
+    reading_seconds: int
 
 
-def reading_minutes(chinese_chars: int, english_words: int) -> int:
-    """Return ceil(chinese_chars / 300 + english_words / 200).
+def reading_seconds(chinese_chars: int, english_words: int) -> int:
+    """Round reading time to the nearest 10 seconds, with halves rounding up.
 
-    The sum is evaluated as the exact rational (2*c + 3*e) / 600, then
-    rounded up to a whole number of minutes. Zero countable content yields 0.
+    Raw seconds are ``chinese_chars / 300 * 60 + english_words / 200 * 60``
+    (0.2 s per Han character and 0.3 s per English word). That value is the
+    exact rational ``(2 * chinese_chars + 3 * english_words) / 10``. Rounding
+    uses only integer arithmetic. Empty input and any total under 5 seconds
+    both yield 0.
     """
-    numerator = chinese_chars * 2 + english_words * 3
-    if numerator <= 0:
+    tenths = chinese_chars * 2 + english_words * 3
+    if tenths <= 0:
         return 0
-    return (numerator + 599) // 600
+    return 10 * ((tenths + 50) // 100)
 
 
 def count_text(text: str) -> CountResult:
@@ -52,7 +55,7 @@ def count_text(text: str) -> CountResult:
     return CountResult(
         chinese_chars=chinese_chars,
         english_words=english_words,
-        reading_minutes=reading_minutes(chinese_chars, english_words),
+        reading_seconds=reading_seconds(chinese_chars, english_words),
     )
 
 
@@ -61,5 +64,5 @@ def format_report(result: CountResult) -> str:
     return (
         f"中文字数: {result.chinese_chars}\n"
         f"英文词数: {result.english_words}\n"
-        f"阅读时间: {result.reading_minutes} 分钟\n"
+        f"阅读时间: {result.reading_seconds} 秒\n"
     )
